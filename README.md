@@ -4,6 +4,9 @@ API REST para FrameBox, biblioteca personal de películas. Node.js + Express + M
 
 ## Tecnologías
 Express · Mongoose · bcrypt · jsonwebtoken · Nodemailer · dotenv · cors
+Base de datos:
+
+MongoDB utilizando Mongoose como ODM.
 
 ## Arquitectura
 ```
@@ -27,13 +30,14 @@ npm run dev            # nodemon
 npm start               # producción
 ```
 
-## Clonar repositorio
+### Clonar repositorio
 
 ```bash
 
 git clone https://github.com/santiagohdev/Framebox-Backend.git
 
 cd framebox-backend
+```
 
 
 ## Variables de entorno
