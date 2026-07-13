@@ -67,10 +67,12 @@ Ejemplo login → `200 { message, token }`
 | PUT | `/api/genres/:id` `{ name }` | Sí |
 | DELETE | `/api/genres/:id` | Sí |
 
-## Deploy (Render / Railway)
-1. Subir el repo a GitHub.
-2. Crear un servicio Web nuevo apuntando a `framebox-backend`.
-3. Build command: `npm install` — Start command: `npm start`.
-4. Cargar las variables de entorno del `.env.example` en el panel del servicio.
-5. Usar un MongoDB Atlas (free tier) como `MONGO_URI` en producción.
-6. Setear `FRONTEND_URL` con la URL real del frontend deployado (para CORS).
+# Instalación
+
+## Clonar repositorio
+
+```bash
+
+git clone https://github.com/santiagohdev/Framebox-Backend.gt
+
+cd framebox-backend
