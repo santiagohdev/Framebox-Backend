@@ -27,6 +27,15 @@ npm run dev            # nodemon
 npm start               # producción
 ```
 
+## Clonar repositorio
+
+```bash
+
+git clone https://github.com/santiagohdev/Framebox-Backend.git
+
+cd framebox-backend
+
+
 ## Variables de entorno
 | Variable | Descripción |
 |---|---|
@@ -66,13 +75,3 @@ Ejemplo login → `200 { message, token }`
 | POST | `/api/genres` `{ name }` | Sí |
 | PUT | `/api/genres/:id` `{ name }` | Sí |
 | DELETE | `/api/genres/:id` | Sí |
-
-# Instalación
-
-## Clonar repositorio
-
-```bash
-
-git clone https://github.com/santiagohdev/Framebox-Backend.gt
-
-cd framebox-backend
