@@ -55,6 +55,14 @@ const login = async ({ email, password }) => {
     throw error;
   }
 
+  if (!user.verified) {
+    const error = new Error(
+      "Tenés que verificar tu email antes de iniciar sesión"
+    );
+    error.statusCode = 403;
+    throw error;
+  }
+
   const token = jwt.sign(
     { id: user._id, email: user.email },
     process.env.JWT_SECRET,
