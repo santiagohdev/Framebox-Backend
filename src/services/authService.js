@@ -63,10 +63,14 @@ const login = async ({ email, password }) => {
     throw error;
   }
 
+  /* Una hora dejaba al usuario afuera en medio de armar su colección, sin
+     aviso y sin forma de renovar. Doce horas cubren una sesión real; lo
+     correcto de verdad sería un refresh token en cookie httpOnly, pero eso
+     cambia el contrato con el frontend y va aparte. */
   const token = jwt.sign(
     { id: user._id, email: user.email },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: process.env.JWT_EXPIRES || "12h" }
   );
 
   return token;

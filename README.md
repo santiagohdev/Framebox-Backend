@@ -1,81 +1,61 @@
-# FrameBox — Backend
+# FrameBox — API
 
-API REST para FrameBox, biblioteca personal de películas. Node.js + Express + MongoDB (Mongoose), autenticación JWT y verificación de email.
+Backend de FrameBox, la biblioteca personal de películas. Express sobre
+MongoDB, con autenticación por JWT y verificación de e-mail.
 
-## Tecnologías
-Express · Mongoose · bcrypt · jsonwebtoken · Nodemailer · dotenv · cors
-Base de datos:
-
-MongoDB utilizando Mongoose como ODM.
+**En vivo:** https://framebox-backend.vercel.app
+**Frontend:** https://github.com/santiagohdev/Framebox-Frontend
 
 ## Arquitectura
-```
-src/
- ├─ config/       # conexión a MongoDB
- ├─ models/       # User, Movie, Genre
- ├─ repositories/ # único acceso a Mongoose
- ├─ services/     # lógica de negocio
- ├─ controllers/  # req/res/next
- ├─ routes/       # endpoints
- ├─ middleware/   # auth, validación, errores
- └─ utils/        # envío de emails
-```
-Flujo: `routes → controllers → services → repositories → models`
 
-## Instalación
-```bash
-npm install
-cp .env.example .env   # completar valores reales
-npm run dev            # nodemon
-npm start               # producción
+Cuatro capas, cada una con una sola responsabilidad:
+
+```
+routes → controllers → services → repositories → modelos
 ```
 
-### Clonar repositorio
-
-```bash
-
-git clone https://github.com/santiagohdev/Framebox-Backend.git
-
-cd framebox-backend
-```
-
-
-## Variables de entorno
-| Variable | Descripción |
-|---|---|
-| PORT | Puerto del servidor |
-| MONGO_URI | Conexión a MongoDB |
-| JWT_SECRET | Secreto para firmar JWT |
-| EMAIL_USER / EMAIL_PASS | Cuenta Gmail (usar contraseña de aplicación) |
-| API_URL | URL pública del backend (para el link del email) |
-| FRONTEND_URL | URL del frontend (para CORS) |
+- **routes** — qué URL responde a qué, y qué validación corre antes
+- **controllers** — traducen HTTP a llamadas de servicio y de vuelta
+- **services** — la lógica del negocio; no saben que existe HTTP
+- **repositories** — lo único que habla con Mongoose
 
 ## Endpoints
 
-### Auth
-| Método | Ruta | Body | Protegida |
-|---|---|---|---|
-| POST | `/api/auth/register` | `{ name, email, password }` | No |
-| POST | `/api/auth/login` | `{ email, password }` | No |
-| GET | `/api/auth/verify/:token` | — | No |
-
-Ejemplo login → `200 { message, token }`
-
-### Movies (todas requieren `Authorization: Bearer <token>`)
-| Método | Ruta | Body |
+| Método | Ruta | Protegido |
 |---|---|---|
-| GET | `/api/movies` | — |
-| GET | `/api/movies/:id` | — |
-| POST | `/api/movies` | `{ title, year, description, poster, genre, status, rating }` |
-| PUT | `/api/movies/:id` | campos a actualizar |
-| PUT | `/api/movies/:id/favorite` | — (alterna favorito) |
-| DELETE | `/api/movies/:id` | — |
+| POST | `/api/auth/register` | no |
+| POST | `/api/auth/login` | no |
+| GET | `/api/auth/verify/:token` | no |
+| GET/POST/PUT/DELETE | `/api/movies` | sí |
+| GET | `/api/genres` | sí |
+| GET | `/api/search` | sí |
 
-### Genres
-| Método | Ruta | Protegida |
-|---|---|---|
-| GET | `/api/genres` | No |
-| GET | `/api/genres/:id` | No |
-| POST | `/api/genres` `{ name }` | Sí |
-| PUT | `/api/genres/:id` `{ name }` | Sí |
-| DELETE | `/api/genres/:id` | Sí |
+## Seguridad
+
+- Contraseñas con **bcrypt**, 10 rondas
+- **JWT** firmado con `JWT_SECRET`, sin valor por defecto: si falta, la app
+  no arranca en vez de firmar con algo adivinable
+- **CORS** restringido a `FRONTEND_URL`
+- **helmet** para las cabeceras
+- **Límite de intentos**: 10 cada 15 minutos en `/api/auth`, 300 en el resto
+- Los errores 500 devuelven un mensaje genérico; el detalle va al log del
+  servidor, no al cliente
+
+## Levantarlo
+
+```bash
+npm install
+cp .env.example .env    # y completar los valores
+npm run dev
+```
+
+## Tests
+
+```bash
+npm test
+```
+
+Levantan un MongoDB en memoria, así que no hace falta tener Mongo instalado
+ni tocar la base real. Cubren registro, login, tokens inválidos y vencidos,
+que la contraseña nunca salga en una respuesta, y que helmet y el límite de
+intentos estén efectivamente activos.
