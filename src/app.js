@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import movieRoutes from "./routes/movieRoutes.js";
 import genreRoutes from "./routes/genreRoutes.js";
@@ -16,13 +17,19 @@ app.set("trust proxy", 1);
 
 // Cabeceras de seguridad por defecto: nosniff, frameguard, HSTS y compañía.
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
+/* credentials en true para que el navegador acepte la cookie de sesión.
+   Con credenciales, el origen no puede ser "*": hay que nombrarlo. */
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true,
+}));
+app.use(cookieParser());
 app.use(express.json({ limit: "100kb" }));
 
 /* Nada frenaba a alguien probando contraseñas contra /api/auth/login. Y como
    bcrypt es caro a propósito, cada intento cuesta CPU del servidor, así que
    además era una vía para saturarlo. */
-const limiteAuth = rateLimit({
+export const limiteAuth = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
   standardHeaders: true,
@@ -31,7 +38,7 @@ const limiteAuth = rateLimit({
 });
 
 // Límite general, mucho más holgado: es un cinturón, no un filtro.
-const limiteGeneral = rateLimit({
+export const limiteGeneral = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
   standardHeaders: true,

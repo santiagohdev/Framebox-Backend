@@ -7,6 +7,8 @@ const findByVerificationToken = (token) =>
 
 const create = (userData) => User.create(userData);
 
+const deleteById = (id) => User.findByIdAndDelete(id);
+
 const updateById = (id, userData) => User.findByIdAndUpdate(id, userData, { new: true });
 
-export default { findByEmail, findByVerificationToken, create, updateById };
+export default { findByEmail, findByVerificationToken, create, updateById, deleteById };

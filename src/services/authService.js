@@ -29,7 +29,22 @@ const register = async ({ name, email, password }) => {
     verificationToken,
   });
 
-  await emailUtil.sendVerificationEmail(newUser.email, verificationToken);
+  /* Si el envío del mail falla, la cuenta YA está creada. Antes la excepción
+     subía y el usuario recibía un 500: creía que el registro no había salido,
+     pero no podía volver a intentarlo porque el email ya figuraba tomado, y
+     tampoco podía entrar porque la cuenta estaba sin verificar. Quedaba
+     encerrado. Ahora se borra la cuenta a medio crear y se avisa. */
+  try {
+    await emailUtil.sendVerificationEmail(newUser.email, verificationToken);
+  } catch (fallo) {
+    console.error("[registro] no se pudo enviar el mail de verificación:", fallo);
+    await userRepository.deleteById(newUser._id);
+    const error = new Error(
+      "No pudimos enviarte el mail de verificación. Probá de nuevo en unos minutos."
+    );
+    error.statusCode = 502;
+    throw error;
+  }
 
   return newUser;
 };
