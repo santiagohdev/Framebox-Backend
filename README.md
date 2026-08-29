@@ -6,6 +6,13 @@ MongoDB, con autenticación por JWT y verificación de e-mail.
 **En vivo:** https://framebox-backend.vercel.app
 **Frontend:** https://github.com/santiagohdev/Framebox-Frontend
 
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white) ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white)
+
+![El panel del frontend, armado enteramente con datos que sirve esta API.](docs/cliente.jpg)
+
+<sub>El panel del frontend, armado enteramente con datos que sirve esta API.</sub>
+
+
 ## Qué hace
 
 - Registro con verificación por e-mail (Nodemailer), login y logout
